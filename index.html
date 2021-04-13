@@ -6,65 +6,91 @@
     <title>Simple Recorder</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./main.css">
-    <!-- <link rel="stylesheet" type="text/css" href="./style.css"> -->
+    <link rel="stylesheet" href="./node_modules/bootstrap-icons/font/bootstrap-icons.css">
 </head>
 
 <body>
+    <!-- Full Page Intro -->
+    <div class="view">
+        <!-- Mask & flexbox options-->
+        <div class="mask gradient-card align-items-center">
+            <!-- Content -->
+            <div class="container d-flex justify-content-center">
+                <div id="mobile-box">
+                    <h3 class="my-5 h5 text-center" style="color:rgb(235, 232, 234)">Simple Recorder <i
+                            class="bi bi-file-play-fill"></i>
+                    </h3>
+                    <div id="controls">
+                        <button id="recordButton" type="button" class="btn btn-primary btn-sm"
+                            data-bs-toggle="button">Record</button>
+                        <!-- <button id="pauseButton" disabled>Pause</button> -->
+                        <button id="stopButton" type="button" class="btn btn-danger btn-sm" disabled>Stop</button>
+                    </div>
+                    <div id="formats">Format: start recording to see sample rate</div>
+                    <p><strong>Recordings:</strong></p>
+                    <ol id="recordingsList"></ol>
+                    <div style="visibility: hidden;" id="displayContent">
+                        <!-- Card -->
+                        <div class="card">
 
-    <div class="card text-center">
-        <div class="card-header">
-            Featured
-        </div>
-        <div class="card-body">
-            <h5 class="card-title">Special title treatment</h5>
-            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
-        </div>
-        <div class="card-footer text-muted">
-            2 days ago
-        </div>
-    </div>
+                            <!-- Card image -->
+                            <div>
+                                <img class="card-img-top"
+                                    src="./images/b4efb6c6682b2a808631bf8fbd96d015-sound-wave-icon-by-vexels.png"
+                                    alt="Card image cap">
+                            </div>
 
-    <div class="text-center">
-        <p class="h2">Simple Recorder</p>
-        <div id="controls">
-            <button id="recordButton" type="button" class="btn btn-primary btn-sm"
-                data-bs-toggle="button">Record</button>
-            <!-- <button id="pauseButton" disabled>Pause</button> -->
-            <button id="stopButton" type="button" class="btn btn-danger btn-sm" disabled>Stop</button>
-        </div>
-        <div id="formats">Format: start recording to see sample rate</div>
-        <p><strong>Recordings:</strong></p>
-        <ol id="recordingsList"></ol>
-    </div>
+                            <!-- Card content -->
+                            <div class="card-body text-center">
 
-    <!-- Card content -->
-    <div class="card-body text-center">
-        <h5 class="h5 font-weight-bold"><a href="https://bachataurban.com/" target="_blank">Dj Flam</a></h5>
-        <p class="mb-0">Urban Bachata remix</p>
+                                <h5 class="h5 font-weight-bold"><a id="audioLink" href="">Dj Flam</a></h5>
 
-        <audio id="music" preload="true">
-            <source src="https://bachataurban.com/download/2/Stefflon%20Don%20-%2016%20Shots%20(%20DJ%20Flam%20-%20Urban%20Bachata%20remix%20).mp3">
-        </audio>
-        <div id="audioplayer">
-            <i id="pButton" class="fas fa-play"></i>
-            <div id="timeline">
-                <div id="playhead"></div>
+                                <audio id="music" preload="true">
+                                    <source id="musicFileS" src="">
+                                </audio>
+                                <div id="audioplayer">
+                                    <i id="pButton" class="bi bi-play-fill"></i>
+                                    <div id="timeline">
+                                        <div id="playhead"></div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <br>
+                                </div>
+
+                                <button id="Transilate" type="button" class="btn btn-primary btn-sm"
+                                    data-bs-toggle="button">Transilate</button>
+
+                            </div>
+                        </div>
+                        <!-- Card -->
+                        <div class="row">
+                            <br>
+                        </div>
+                    </div>
+
+                    <div style="visibility: hidden;" id="transilatedAudio">
+                        <div class="card">
+                            <div class="card-body">
+                                <figure class="text-center">
+                                    <blockquote class="blockquote">
+                                        <p>A well-known quote, contained in a blockquote element.</p>
+                                    </blockquote>
+                                    <figcaption class="blockquote-footer">
+                                        Someone famous in <cite title="Source Title">Source Title</cite>
+                                    </figcaption>
+                                </figure>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
+            <!-- Content -->
+
+
         </div>
+        <!-- Mask & flexbox options-->
     </div>
-
-    <!-- Card -->
-
-
-    <figure class="text-center">
-        <blockquote class="blockquote">
-            <p>A well-known quote, contained in a blockquote element.</p>
-        </blockquote>
-        <figcaption class="blockquote-footer">
-            Someone famous in <cite title="Source Title">Source Title</cite>
-        </figcaption>
-    </figure>
 
     <script src="js/recorder.js"></script>
     <script src="js/app.js"></script>

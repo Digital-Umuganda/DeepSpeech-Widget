@@ -7,7 +7,9 @@ var timer_is_on = 0
 
 var gumStream; 						//stream from getUserMedia()
 var rec; 							//Recorder.js object
-var input; 							//MediaStreamAudioSourceNode we'll be recording
+var input;
+
+var globalBlob;//MediaStreamAudioSourceNode we'll be recording
 
 // shim for AudioContext when it's not avb. 
 var AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -15,6 +17,9 @@ var audioContext //audio context to help us record
 
 var recordButton = document.getElementById("recordButton");
 var stopButton = document.getElementById("stopButton");
+var displayContent = document.getElementById("displayContent");
+var musicFile = document.getElementById("musicFileS");
+var audioLink = document.getElementById("audioLink");
 // var pauseButton = document.getElementById("pauseButton");
 
 //add events to those 2 buttons
@@ -102,6 +107,7 @@ function pauseRecording() {
 
 function stopRecording() {
 	console.log("stopButton clicked");
+	displayContent.style.visibility = "visible";
 	stopCount();
 	//disable the stop button, enable the record too allow for new recordings
 	stopButton.disabled = true;
@@ -122,7 +128,7 @@ function stopRecording() {
 }
 
 function createDownloadLink(blob) {
-
+	globalBlob = blob;
 	var url = URL.createObjectURL(blob);
 	var au = document.createElement('audio');
 	var li = document.createElement('li');
@@ -144,29 +150,36 @@ function createDownloadLink(blob) {
 	li.appendChild(au);
 
 	//add the filename to the li
-	li.appendChild(document.createTextNode(filename + ".wav "))
+	//li.appendChild(document.createTextNode(filename + ".wav "))
 
 	//add the save to disk link to li
-	li.appendChild(link);
+	//li.appendChild(link);
+	audioLink.href = url;
+	audioLink.download = filename + ".wav ";
+	audioLink.innerHTML = filename + ".wav ";
+	musicFileS.src = filename + ".wav ";
 
 	//upload link
-	var upload = document.createElement('a');
-	upload.href = "#";
-	upload.innerHTML = "Upload";
-	upload.addEventListener("click", function (event) {
-		var xhr = new XMLHttpRequest();
-		xhr.onload = function (e) {
-			if (this.readyState === 4) {
-				console.log("Server returned: ", e.target.responseText);
-			}
-		};
-		var fd = new FormData();
-		fd.append("audio_data", blob, filename);
-		xhr.open("POST", "upload.php", true);
-		xhr.send(fd);
-	})
+	// var upload = document.createElement('button');
+	// upload.type = "button";
+	// upload.classList.add("btn");
+	// upload.classList.add("btn-primary");
+	// upload.classList.add("btn-sm");
+	// upload.innerHTML = "Upload";
+	// upload.addEventListener("click", function (event) {
+	// 	var xhr = new XMLHttpRequest();
+	// 	xhr.onload = function (e) {
+	// 		if (this.readyState === 4) {
+	// 			console.log("Server returned: ", e.target.responseText);
+	// 		}
+	// 	};
+	// 	var fd = new FormData();
+	// 	fd.append("audio_data", blob, filename);
+	// 	xhr.open("POST", "upload.php", true);
+	// 	xhr.send(fd);
+	// })
 	li.appendChild(document.createTextNode(" "))//add a space in between
-	li.appendChild(upload)//add the upload link to li
+	//li.appendChild(upload)//add the upload link to li
 
 	//add the li element to the ol
 	recordingsList.appendChild(li);
@@ -191,3 +204,127 @@ function stopCount() {
 	clearTimeout(t);
 	timer_is_on = 0;
 }
+
+
+
+
+
+
+
+var music = document.getElementById('music'); // id for audio element
+var duration = music.duration; // Duration of audio clip, calculated here for embedding purposes
+var pButton = document.getElementById('pButton'); // play button
+var playhead = document.getElementById('playhead'); // playhead
+var timeline = document.getElementById('timeline'); // timeline
+var Transilate = document.getElementById('Transilate'); // timeline
+var transilatedAudio = document.getElementById('transilatedAudio'); // timeline
+
+// timeline width adjusted for playhead
+var timelineWidth = timeline.offsetWidth - playhead.offsetWidth;
+
+// play button event listenter
+pButton.addEventListener("click", play);
+
+Transilate.addEventListener("click", transilate);
+
+// timeupdate event listener
+music.addEventListener("timeupdate", timeUpdate, false);
+
+// makes timeline clickable
+timeline.addEventListener("click", function (event) {
+	moveplayhead(event);
+	music.currentTime = duration * clickPercent(event);
+}, false);
+
+// returns click as decimal (.77) of the total timelineWidth
+function clickPercent(event) {
+	return (event.clientX - getPosition(timeline)) / timelineWidth;
+}
+
+// makes playhead draggable
+playhead.addEventListener('mousedown', mouseDown, false);
+window.addEventListener('mouseup', mouseUp, false);
+
+// Boolean value so that audio position is updated only when the playhead is released
+var onplayhead = false;
+
+// mouseDown EventListener
+function mouseDown() {
+	onplayhead = true;
+	window.addEventListener('mousemove', moveplayhead, true);
+	music.removeEventListener('timeupdate', timeUpdate, false);
+}
+
+// mouseUp EventListener
+// getting input from all mouse clicks
+function mouseUp(event) {
+	if (onplayhead == true) {
+		moveplayhead(event);
+		window.removeEventListener('mousemove', moveplayhead, true);
+		// change current time
+		music.currentTime = duration * clickPercent(event);
+		music.addEventListener('timeupdate', timeUpdate, false);
+	}
+	onplayhead = false;
+}
+// mousemove EventListener
+// Moves playhead as user drags
+function moveplayhead(event) {
+	var newMargLeft = event.clientX - getPosition(timeline);
+
+	if (newMargLeft >= 0 && newMargLeft <= timelineWidth) {
+		playhead.style.marginLeft = newMargLeft + "px";
+	}
+	if (newMargLeft < 0) {
+		playhead.style.marginLeft = "0px";
+	}
+	if (newMargLeft > timelineWidth) {
+		playhead.style.marginLeft = timelineWidth + "px";
+	}
+}
+
+// timeUpdate
+// Synchronizes playhead position with current point in audio
+function timeUpdate() {
+	var playPercent = timelineWidth * (music.currentTime / duration);
+	playhead.style.marginLeft = playPercent + "px";
+	if (music.currentTime == duration) {
+		pButton.className = "";
+		pButton.className = "fas fa-play";
+	}
+}
+
+//Play and Pause
+function play() {
+	// start music
+	if (music.paused) {
+		music.play();
+		// remove play, add pause
+		pButton.className = "";
+		pButton.className = "fas fa-pause";
+	} else { // pause music
+		music.pause();
+		// remove pause, add play
+		pButton.className = "";
+		pButton.className = "fas fa-play";
+	}
+}
+
+function transilate() {
+	transilatedAudio.style.visibility = "visible";
+	var xhr = new XMLHttpRequest();
+	xhr.onload = function (e) {
+		if (this.readyState === 4) {
+			console.log("Server returned: ", e.target.responseText);
+		}
+	};
+	var fd = new FormData();
+	fd.append("audio_data", globalBlob, filename);
+	xhr.open("POST", "upload.php", true);
+	xhr.send(fd);
+}
+
+// Gets audio file duration
+music.addEventListener("canplaythrough", function () {
+	duration = music.duration;
+}, false);
