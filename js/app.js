@@ -5,8 +5,8 @@ var c = 0;
 var t;
 var timer_is_on = 0
 
-var gumStream; 						//stream from getUserMedia()
-var rec; 							//Recorder.js object
+var gumStream; 						
+var rec; 						
 var input;
 
 var globalBlob;//MediaStreamAudioSourceNode we'll be recording
