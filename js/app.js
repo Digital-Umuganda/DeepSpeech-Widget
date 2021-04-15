@@ -22,6 +22,8 @@ Transilate.addEventListener("click", transilate);
 recordButton.addEventListener("click", startRecording);
 stopButton.addEventListener("click", stopRecording);
 
+loadingPage();
+
 function startRecording() {
 	c = 0;
 	timer_is_on = 0;
@@ -86,38 +88,42 @@ function stopCount() {
 
 function transilate() {
 	transilatedAudio.style.visibility = "visible";
-
 	var formData = new FormData();
-
-    // add assoc key values, this will be posts values
-    formData.append("audio", globalBlob, filename);
-console.log(formData);
+	formData.append("audio", globalBlob, filename);
 	$.ajax({
-	   url: 'https://mbaza.dev.cndp.org.rw/deepspeech/api/api/stt/http',
-	   type: 'post',
-	   data: formData,
-	   contentType: false,
-	   processData: false,
-	   success: function(response){
-		   console.log(response);
-		//   if(response != 0){
-		// 	 $("#img").attr("src",response); 
-		// 	 $(".preview img").show(); // Display image element
-		//   }else{
-		// 	 alert('file not uploaded');
-		//   }
-	   },
+		url: 'https://mbaza.dev.cndp.org.rw/deepspeech/api/api/stt/http',
+		type: 'post',
+		data: formData,
+		contentType: false,
+		processData: false,
+		success: function (response) {
+			console.log(response);
+			//   if(response != 0){
+			// 	 $("#img").attr("src",response); 
+			// 	 $(".preview img").show(); // Display image element
+			//   }else{
+			// 	 alert('file not uploaded');
+			//   }
+		},
 	});
 
+}
 
-	// var xhr = new XMLHttpRequest();
-	// xhr.onload = function (e) {
-	// 	if (this.readyState === 4) {
-	// 		console.log("Server returned: ", e.target.responseText);
-	// 	}
-	// };
-	// var fd = new FormData();
-	// fd.append("audio", globalBlob, filename);
-	// xhr.open("POST", "https://mbaza.dev.cndp.org.rw/deepspeech/api/api/stt/http", true);
-	// xhr.send(fd);
+function loadingPage() {
+	$.ajax({
+		url: 'https://mbaza.dev.cndp.org.rw/deepspeech/api/token',
+		type: 'post',
+		data: {
+			"username": "lcdamy",
+			"password": "Zudanga@1"
+		},
+		contentType: false,
+		processData: false,
+		success: function (response) {
+			console.log(response);
+			$("div.spanner").removeClass("show");
+			$("div.overlay").removeClass("show");
+		},
+	});
+
 }
