@@ -86,14 +86,38 @@ function stopCount() {
 
 function transilate() {
 	transilatedAudio.style.visibility = "visible";
-	var xhr = new XMLHttpRequest();
-	xhr.onload = function (e) {
-		if (this.readyState === 4) {
-			console.log("Server returned: ", e.target.responseText);
-		}
-	};
-	var fd = new FormData();
-	fd.append("audio", globalBlob, filename);
-	xhr.open("POST", "https://mbaza.dev.cndp.org.rw/deepspeech/api/api/stt/http", true);
-	xhr.send(fd);
+
+	var formData = new FormData();
+
+    // add assoc key values, this will be posts values
+    formData.append("audio", globalBlob, filename);
+console.log(formData);
+	$.ajax({
+	   url: 'https://mbaza.dev.cndp.org.rw/deepspeech/api/api/stt/http',
+	   type: 'post',
+	   data: formData,
+	   contentType: false,
+	   processData: false,
+	   success: function(response){
+		   console.log(response);
+		//   if(response != 0){
+		// 	 $("#img").attr("src",response); 
+		// 	 $(".preview img").show(); // Display image element
+		//   }else{
+		// 	 alert('file not uploaded');
+		//   }
+	   },
+	});
+
+
+	// var xhr = new XMLHttpRequest();
+	// xhr.onload = function (e) {
+	// 	if (this.readyState === 4) {
+	// 		console.log("Server returned: ", e.target.responseText);
+	// 	}
+	// };
+	// var fd = new FormData();
+	// fd.append("audio", globalBlob, filename);
+	// xhr.open("POST", "https://mbaza.dev.cndp.org.rw/deepspeech/api/api/stt/http", true);
+	// xhr.send(fd);
 }
